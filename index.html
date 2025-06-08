@@ -3,588 +3,691 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CPN Setup Guide - Complete Manual</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <title>Interactive CPN Setup Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; line-height: 1.6; }
-        .warning-box { background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%); border-left: 4px solid #f59e0b; }
-        .danger-box { background: linear-gradient(135deg, #fecaca 0%, #ef4444 100%); border-left: 4px solid #dc2626; }
-        .info-box { background: linear-gradient(135deg, #dbeafe 0%, #3b82f6 100%); border-left: 4px solid #2563eb; }
-        .success-box { background: linear-gradient(135deg, #d1fae5 0%, #10b981 100%); border-left: 4px solid #059669; }
-        .step-number { background: linear-gradient(135deg, #1f2937 0%, #374151 100%); color: white; width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; }
-        .equipment-card { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 1rem; margin-bottom: 0.5rem; }
-        .code-block { background-color: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 0.875rem; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Lighter gray background */
+        }
+        .step-nav { transition: all 0.3s ease; }
+        .step-nav.completed { background-color: #16a34a !important; color: white !important; }
+        .step-nav.active { background-color: #2563eb !important; color: white !important; }
+        .step-section {
+            display: none;
+            border-left: 3px solid transparent;
+            transition: border-left 0.3s ease;
+        }
+        .step-section.active {
+            display: block;
+            border-left-color: #2563eb;
+        }
+        .checklist-item {
+            transition: all 0.2s ease-in-out;
+            border-left: 4px solid #d1d5db;
+        }
+        .checklist-item.completed {
+            background-color: #f0fdf4;
+            border-left-color: #22c55e;
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+        .checklist-item.completed .checkbox-icon {
+            background-color: #22c55e;
+            border-color: #22c55e;
+            color: white;
+        }
+        .checkbox-icon {
+            transition: all 0.2s ease-in-out;
+        }
+        .code-block {
+            background-color: #1f2937;
+            color: #d1d5db;
+            font-family: 'Courier New', monospace;
+            position: relative;
+        }
+        .code-block .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #4b5563;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        .code-block:hover .copy-btn {
+            opacity: 1;
+        }
+        .tooltip {
+            position: relative;
+            cursor: help;
+            border-bottom: 1px dotted #3b82f6;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 250px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tooltip .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1f2937 transparent transparent transparent;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+        .image-zoom-container {
+            cursor: zoom-in;
+            overflow: hidden;
+        }
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 9998;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-100 text-gray-800">
 
-    <header class="bg-gray-900 text-white py-6">
-        <div class="max-w-7xl mx-auto px-4">
+    <!-- Header -->
+    <header class="bg-gray-800 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <i class="fas fa-satellite-dish text-3xl text-blue-400"></i>
+                <i class="fas fa-satellite-dish text-4xl text-blue-400"></i>
                 <div>
-                    <h1 class="text-3xl font-bold">Command Post Node (CPN) Setup Guide</h1>
-                    <p class="text-gray-300">Comprehensive Manual for BnCPN Installation & Configuration</p>
+                    <h1 class="text-2xl font-bold">Interactive CPN Setup Guide</h1>
+                    <p class="text-sm text-gray-300">AN/TTC-64D(V)3 | A comprehensive, step-by-step manual</p>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8">
-
-        <section class="mb-12">
-            <div class="bg-white rounded-lg shadow-lg p-8">
-                <div class="flex items-center mb-6">
-                    <i class="fas fa-info-circle text-3xl text-blue-600 mr-4"></i>
-                    <h2 class="text-2xl font-bold text-gray-800">Mission Overview</h2>
-                </div>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div>
-                        <h3 class="text-xl font-semibold mb-3 text-gray-700">What is a Command Post Node (CPN)?</h3>
-                        <p class="text-gray-600 mb-4">
-                            The Command Post Node (CPN) is a tactical communications system designed to provide secure, high-capacity voice and data communications for battalion-level headquarters and smaller units. It serves as the primary communications backbone for field operations, enabling connectivity to higher echelon networks including WIN-T (Warfighter Information Network-Tactical) and the Global Information Grid (GIG).
-                        </p>
-                        <h4 class="font-semibold text-gray-700 mb-2">Key Capabilities:</h4>
-                        <ul class="list-disc list-inside text-gray-600 space-y-1">
-                            <li>Secure voice and data communications</li>
-                            <li>Internet Protocol (IP) routing and switching</li>
-                            <li>Satellite communications (SATCOM) connectivity</li>
-                            <li>Integration with higher echelon networks</li>
-                            <li>Support for multiple security classifications</li>
-                            <li>Mobile and deployable operations</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                            <h4 class="font-semibold text-blue-800 mb-2">
-                                <i class="fas fa-lightbulb mr-2"></i>Quick Start Tip
-                            </h4>
-                            <p class="text-blue-700 text-sm">
-                                Review all safety procedures and ensure all required personnel are available before beginning setup. Having experienced signal personnel is critical to mission success.
-                            </p>
-                        </div>
-                         <div class="mt-6 p-4 bg-gray-100 rounded-lg border border-gray-200">
-                            <h4 class="font-semibold text-gray-800 mb-2">
-                                <i class="fas fa-book-open mr-2"></i>Manual Structure
-                            </h4>
-                            <p class="text-gray-700 text-sm">
-                                This guide is organized into sequential steps. Complete each step's checklists before proceeding to the next to ensure a successful and safe setup.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+    <!-- Sticky Navigation -->
+    <nav id="step-navigation" class="sticky top-0 bg-white shadow-md z-50">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="flex justify-around items-center h-16 overflow-x-auto whitespace-nowrap">
+                <!-- Nav items will be generated by JS -->
             </div>
-        </section>
+        </div>
+    </nav>
 
-        <section class="mb-8">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="bg-red-600 text-white p-4">
-                    <div class="flex items-center">
-                        <div class="step-number mr-4">1</div>
-                        <div>
-                            <h2 class="text-xl font-bold">Prerequisites and Safety Procedures</h2>
-                            <p class="text-red-100">Critical safety requirements and pre-deployment checks</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <div class="danger-box p-4 rounded-lg mb-6">
-                        <h3 class="font-bold text-red-800 mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>CRITICAL SAFETY WARNING</h3>
-                        <ul class="text-red-700 space-y-1 text-sm">
-                            <li>• **High voltage equipment** - ensure proper grounding before operation.</li>
-                            <li>• **Radio frequency (RF) radiation hazard** - maintain safe distances during transmission.</li>
-                            <li>• **Heavy equipment lifting** - use proper lifting techniques and equipment.</li>
-                            <li>• **Classified material handling** - follow all COMSEC procedures.</li>
-                        </ul>
-                    </div>
-                    <div class="grid md:grid-cols-2 gap-6 mb-6">
-                         <div>
-                            <h3 class="text-xl font-semibold mb-4 text-gray-800">Required Personnel</h3>
-                            <div class="equipment-card">
-                                <h4 class="font-semibold text-gray-700 mb-2">Primary Team</h4>
-                                <ul class="text-gray-600 space-y-1 text-sm">
-                                    <li>• Signal Officer (25A) - 1 required</li>
-                                    <li>• Information Technology Specialist (25B) - 2 required</li>
-                                    <li>• Satellite Communications Operator (25S) - 1 required</li>
-                                </ul>
-                             </div>
-                             <div class="equipment-card">
-                                 <h4 class="font-semibold text-gray-700 mb-2">Support Team</h4>
-                                <ul class="text-gray-600 space-y-1 text-sm">
-                                    <li>• Power Generation Equipment Repairer (91D) - 1 required</li>
-                                    <li>• Motor Transport Operator (88M) - 2 required</li>
-                                    <li>• Security Personnel - As required by mission</li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div>
-                             <h3 class="text-xl font-semibold mb-4 text-gray-800">Security Clearance Requirements</h3>
-                            <div class="info-box p-4 rounded-lg h-full">
-                                <ul class="text-blue-800 space-y-2">
-                                    <li><strong>Secret Clearance:</strong> All personnel handling classified equipment.</li>
-                                    <li><strong>Top Secret/SCI:</strong> Personnel configuring SIPR networks and classified routing.</li>
-                                    <li><strong>COMSEC Custodian:</strong> Personnel handling cryptographic materials.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Pre-Deployment Checklist</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-2">
-                            <li>Conduct site survey and security assessment.</li>
-                            <li>Verify all personnel security clearances and training.</li>
-                            <li>Complete equipment inventory and operational checks.</li>
-                            <li>Obtain COMSEC materials and cryptographic keys.</li>
-                            <li>Coordinate transportation and logistics support.</li>
-                            <li>Review and approve frequency allocations and call signs.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-8">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="bg-blue-600 text-white p-4">
-                     <div class="flex items-center">
-                        <div class="step-number mr-4">2</div>
-                        <div>
-                            <h2 class="text-xl font-bold">Equipment Inventory and Verification</h2>
-                            <p class="text-blue-100">Complete equipment list and pre-deployment inspection</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                     <div class="warning-box p-4 rounded-lg mb-6">
-                        <p class="text-yellow-800"><i class="fas fa-exclamation-triangle mr-2"></i><strong>Important:</strong> All equipment must pass inspection before deployment. Document any deficiencies and coordinate replacement equipment as required.</p>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Core System Components</h3>
-                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
-                        <div class="equipment-card">
-                            <h4 class="font-medium text-gray-700 mb-2">ANTTC-64D(V)3 Shelter System</h4>
-                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>Environmentally controlled enclosure with power distribution and equipment racks.</li></ul>
-                        </div>
-                        <div class="equipment-card">
-                            <h4 class="font-medium text-gray-700 mb-2">WIN-T Point-of-Presence (POP)</h4>
-                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>Provides network routing, switching, and satellite interface capabilities.</li></ul>
-                        </div>
-                    </div>
-                     <h3 class="text-xl font-semibold mb-4 text-gray-800">Satellite and Crypto Equipment</h3>
-                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
-                         <div class="equipment-card">
-                            <h4 class="font-medium text-gray-700 mb-2">AN/TSC-185B Phoenix Terminal</h4>
-                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>Mobile Ku-band satellite terminal.</li></ul>
-                        </div>
-                        <div class="equipment-card">
-                            <h4 class="font-medium text-gray-700 mb-2">KG-175D TACLANE Encryptor</h4>
-                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>High-speed network encryptor for securing data up to Top Secret/SCI.</li></ul>
-                        </div>
-                    </div>
-                     <h3 class="text-xl font-semibold mb-4 text-gray-800">Power and Network Infrastructure</h3>
-                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
-                         <div class="equipment-card">
-                            <h4 class="font-medium text-gray-700 mb-2">MEP-831A Generator & UPS</h4>
-                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>Provides primary and backup power for all systems.</li></ul>
-                        </div>
-                        <div class="equipment-card">
-                            <h4 class="font-medium text-gray-700 mb-2">Cisco Routers & Switches</h4>
-                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>Forms the backbone of the local classified and unclassified networks.</li></ul>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Equipment Inspection Checklist</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-2">
-                           <li>Verify all equipment serial numbers against property book.</li>
-                           <li>Conduct power-on self-test (POST) for all electronic equipment.</li>
-                           <li>Inspect all cables and connectors for damage or wear.</li>
-                           <li>Verify antenna systems are complete and undamaged.</li>
-                           <li>Test generator operation and fuel system integrity.</li>
-                           <li>Confirm availability of technical manuals and documentation.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-8">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="bg-green-600 text-white p-4">
-                    <div class="flex items-center">
-                        <div class="step-number mr-4">3</div>
-                        <div>
-                            <h2 class="text-xl font-bold">Site Preparation and Physical Setup</h2>
-                            <p class="text-green-100">Site survey, preparation, and shelter deployment</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <div class="warning-box p-4 rounded-lg mb-6">
-                        <p class="text-yellow-800"><i class="fas fa-exclamation-triangle mr-2"></i><strong>Safety Notice:</strong> Shelter deployment requires coordination of multiple personnel and heavy equipment. Ensure all safety procedures are followed.</p>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Site Selection Requirements</h3>
-                     <div class="grid lg:grid-cols-2 gap-6 mb-6">
-                        <div class="equipment-card">
-                             <h4 class="font-semibold text-gray-700 mb-2">Location Requirements</h4>
-                             <ul class="text-gray-600 space-y-2 text-sm list-disc list-inside">
-                                <li><strong>Size:</strong> Minimum 100m x 100m cleared area.</li>
-                                <li><strong>Elevation:</strong> High ground with clear line of sight to the southern sky (for CONUS).</li>
-                                <li><strong>Access:</strong> Vehicle accessible for heavy equipment.</li>
-                                <li><strong>Security:</strong> Defensible position with multiple egress routes.</li>
-                            </ul>
-                        </div>
-                        <div class="equipment-card">
-                             <h4 class="font-semibold text-gray-700 mb-2">Environmental Considerations</h4>
-                            <ul class="text-gray-600 space-y-2 text-sm list-disc list-inside">
-                                <li><strong>RF Environment:</strong> Survey for interference sources (power lines, other transmitters).</li>
-                                <li><strong>Weather:</strong> Assess prevailing wind patterns and ensure good drainage.</li>
-                                <li><strong>Ground:</strong> Must be firm and as level as possible.</li>
-                                <li><strong>Vegetation:</strong> Clear any obstacles for antenna positioning.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Shelter and Antenna Setup</h3>
-                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <h4 class="font-semibold text-gray-700 mb-3">Shelter Deployment</h4>
-                            <div class="equipment-card">
-                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                     <li>Position shelter using GPS coordinates from plan.</li>
-                                     <li>Orient door away from prevailing winds.</li>
-                                     <li>Deploy stabilizer jacks and level the shelter.</li>
-                                     <li>Connect grounding system to the site earth ground.</li>
-                                 </ul>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-700 mb-3">Antenna Installation</h4>
-                             <div class="equipment-card">
-                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                     <li>Assemble antenna reflector and feed assembly.</li>
-                                     <li>Mount antenna and connect RF cables.</li>
-                                     <li>Perform initial pointing using GPS and compass.</li>
-                                     <li>Ensure proper separation from other antennas to minimize interference.</li>
-                                 </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Site Setup Verification Checklist</h3>
-                         <ul class="list-disc list-inside text-gray-700 space-y-2">
-                           <li>Complete site survey and environmental assessment.</li>
-                           <li>Deploy and secure ANTTC-64D(V)3 shelter system.</li>
-                           <li>Install and test environmental control systems (ECU).</li>
-                           <li>Deploy and align all antenna systems.</li>
-                           <li>Establish perimeter security and access control.</li>
-                           <li>Verify power generation and distribution systems are ready.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-8">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="bg-yellow-600 text-white p-4">
-                     <div class="flex items-center">
-                        <div class="step-number mr-4">4</div>
-                        <div>
-                            <h2 class="text-xl font-bold">Power Systems Installation and Testing</h2>
-                            <p class="text-yellow-100">Generator setup, power distribution, and grounding</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <div class="danger-box p-4 rounded-lg mb-6">
-                        <p class="text-red-800"><i class="fas fa-exclamation-triangle mr-2"></i><strong>High Voltage Warning:</strong> Only qualified personnel (91D) should perform electrical installations. Follow all safety lockout/tagout procedures.</p>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Generator & UPS Setup</h3>
-                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
-                         <div class="equipment-card">
-                            <h4 class="font-semibold text-gray-700 mb-2">MEP-831A Generator Setup</h4>
-                            <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                <li>Position generator minimum 10 feet from structures.</li>
-                                <li>Connect fuel system and prime if necessary.</li>
-                                <li>Perform pre-start inspection (oil, coolant, battery).</li>
-                                <li>Start generator and verify stable voltage (120V/208V) and frequency (60Hz).</li>
-                            </ul>
-                        </div>
-                        <div class="equipment-card">
-                            <h4 class="font-semibold text-gray-700 mb-2">UPS Configuration</h4>
-                             <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                <li>Connect critical loads (e.g., routers, servers, crypto) to the UPS.</li>
-                                <li>Ensure UPS is connected to a dedicated circuit from the distribution panel.</li>
-                                <li>Test battery runtime by simulating a power failure.</li>
-                                <li>Configure automatic shutdown scripts for servers if applicable.</li>
-                            </ul>
-                        </div>
-                    </div>
-                     <h3 class="text-xl font-semibold mb-4 text-gray-800">Grounding and Bonding</h3>
-                     <div class="grid lg:grid-cols-2 gap-6 mb-6">
-                        <div class="equipment-card">
-                            <h4 class="font-semibold text-gray-700 mb-2">Earth Grounding System</h4>
-                            <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                <li>Install a minimum of 3 ground rods, 8 feet deep, spaced 6 feet apart.</li>
-                                <li>Connect rods with #4 AWG bare copper wire.</li>
-                                <li>Test ground resistance (must be **≤10 ohms**).</li>
-                            </ul>
-                        </div>
-                         <div class="equipment-card">
-                            <h4 class="font-semibold text-gray-700 mb-2">Equipment Bonding</h4>
-                            <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                <li>Bond all equipment chassis, racks, and the shelter frame to the grounding system.</li>
-                                <li>Install surge protection devices on power and data lines.</li>
-                                <li>Verify electrical continuity of all bonds.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Power System Verification Checklist</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-2">
-                           <li>Install and test MEP-831A generator under load.</li>
-                           <li>Configure power distribution panel and label all circuits.</li>
-                           <li>Install and test UPS systems for critical loads.</li>
-                           <li>Install grounding system and verify resistance is ≤10 ohms.</li>
-                           <li>Test automatic transfer switches and emergency shutdown.</li>
-                           <li>Verify all safety systems and protective devices (GFCIs).</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-8">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="bg-purple-600 text-white p-4">
-                     <div class="flex items-center">
-                        <div class="step-number mr-4">5</div>
-                        <div>
-                            <h2 class="text-xl font-bold">Network Configuration and Integration</h2>
-                            <p class="text-purple-100">IP configuration, routing setup, and network security</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <div class="info-box p-4 rounded-lg mb-6">
-                        <p class="text-blue-800"><i class="fas fa-info-circle mr-2"></i><strong>Network Design:</strong> The CPN implements a multi-tier architecture supporting both classified (SIPR) and unclassified (NIPR) traffic through separate, physically or logically isolated security domains.</p>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Core Network Setup</h3>
-                     <div class="grid lg:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <h4 class="font-semibold text-gray-700 mb-3">Switch & VLAN Configuration</h4>
-                            <div class="equipment-card">
-                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                     <li>Load baseline configuration on switches.</li>
-                                     <li>Configure VLANs to segment traffic (e.g., VLAN 100 for SIPR, VLAN 200 for NIPR).</li>
-                                     <li>Implement port security to restrict unauthorized device access.</li>
-                                     <li>Configure trunk ports to carry tagged VLAN traffic between switches and routers.</li>
-                                 </ul>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-700 mb-3">Router & Routing Protocols</h4>
-                            <div class="equipment-card">
-                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                     <li>Configure router interfaces for each VLAN.</li>
-                                     <li>Set up **OSPF** for internal routing within the CPN.</li>
-                                     <li>Configure **BGP** for external routing to the WIN-T network.</li>
-                                     <li>Implement Access Control Lists (ACLs) to filter traffic between networks.</li>
-                                 </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">TACLANE and Security Configuration</h3>
-                    <div class="equipment-card mb-6">
-                        <h4 class="font-semibold text-gray-700 mb-2">TACLANE Integration</h4>
-                        <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                            <li>Physically install TACLANE encryptors between the router and the "black" (unsecured) side of the satellite link.</li>
-                            <li>Load cryptographic keys using a KIV-7M or other fill device.</li>
-                            <li>Configure the TACLANE with the correct IP settings to create a secure tunnel.</li>
-                            <li>Verify traffic is being successfully encrypted and decrypted.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Network Configuration Checklist</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-2">
-                           <li>Configure WIN-T POP and core switches with baseline settings.</li>
-                           <li>Set up VLAN segmentation for all security domains.</li>
-                           <li>Configure OSPF and BGP routing protocols.</li>
-                           <li>Implement security policies, ACLs, and firewall rules.</li>
-                           <li>Install and configure TACLANE devices with current keys.</li>
-                           <li>Test network connectivity and routing tables within the CPN.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-8">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="bg-indigo-600 text-white p-4">
-                     <div class="flex items-center">
-                        <div class="step-number mr-4">6</div>
-                        <div>
-                            <h2 class="text-xl font-bold">Satellite Communications Setup</h2>
-                            <p class="text-indigo-100">Antenna pointing, modem configuration, and link establishment</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                     <div class="warning-box p-4 rounded-lg mb-6">
-                        <p class="text-yellow-800"><i class="fas fa-exclamation-triangle mr-2"></i><strong>RF Safety Warning:</strong> Maintain minimum safe distances from transmitting antennas. Coordinate with RF safety officer before energizing systems.</p>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Antenna Pointing and Modem Setup</h3>
-                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <h4 class="font-semibold text-gray-700 mb-3">Antenna Pointing & Alignment</h4>
-                            <div class="equipment-card">
-                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                     <li>Use the satellite acquisition plan to determine correct Azimuth, Elevation, and Polarization.</li>
-                                     <li>Use a spectrum analyzer to find the satellite beacon.</li>
-                                     <li>Perform fine-tuning adjustments to peak the signal for maximum strength.</li>
-                                     <li>Lock the antenna position.</li>
-                                 </ul>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-700 mb-3">Satellite Modem Configuration</h4>
-                             <div class="equipment-card">
-                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                     <li>Configure the modem with the correct transmit/receive frequencies, data rates, and modulation type per the mission plan.</li>
-                                     <li>Set the modem's IP addresses to integrate with the router.</li>
-                                     <li>Enable automatic power control (APC) to maintain link stability.</li>
-                                 </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Link Establishment and Monitoring</h3>
-                    <div class="equipment-card mb-6">
-                        <h4 class="font-semibold text-gray-700 mb-2">Acquiring the Link</h4>
-                        <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                           <li>Coordinate with the satellite network control station to bring up the link.</li>
-                           <li>Enable the modem transmitter and verify power levels.</li>
-                           <li>Monitor key performance indicators (KPIs) like **Eb/No** (signal quality) and **BER** (bit error rate).</li>
-                           <li>The target Eb/No is typically >8.0 dB, with a BER of <1x10⁻⁶.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">SATCOM Configuration Checklist</h3>
-                        <ul class="list-disc list-inside text-gray-700 space-y-2">
-                           <li>Install and align satellite antenna system.</li>
-                           <li>Configure satellite modem with correct RF and network parameters.</li>
-                           <li>Establish satellite link and verify performance meets mission standards.</li>
-                           <li>Integrate SATCOM with network routing via the default route.</li>
-                           <li>Configure QoS and traffic management for the satellite link.</li>
-                           <li>Test end-to-end connectivity to a higher echelon node.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="mb-8">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="bg-teal-600 text-white p-4">
-                     <div class="flex items-center">
-                        <div class="step-number mr-4">7</div>
-                        <div>
-                            <h2 class="text-xl font-bold">System Testing and Validation</h2>
-                            <p class="text-teal-100">Comprehensive testing procedures and acceptance criteria</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <div class="info-box p-4 rounded-lg mb-6">
-                        <p class="text-blue-800"><i class="fas fa-info-circle mr-2"></i><strong>Test Objective:</strong> Verify that all CPN systems meet operational requirements and can support mission-critical communications before declaring Full Operational Capability (FOC).</p>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Network and Communications Testing</h3>
-                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
-                         <div class="equipment-card">
-                            <h4 class="font-semibold text-gray-700 mb-2">Network Performance Tests</h4>
-                             <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                <li>Conduct `ping` and `traceroute` tests to all key nodes.</li>
-                                <li>Verify DNS resolution and DHCP lease assignment.</li>
-                                <li>Run `iperf` or similar tools to test throughput between LAN clients and across the WAN link.</li>
-                                <li>Measure latency and jitter for real-time applications.</li>
-                            </ul>
-                        </div>
-                        <div class="equipment-card">
-                            <h4 class="font-semibold text-gray-700 mb-2">Application & Voice Tests</h4>
-                             <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                <li>Make test calls using secure voice (STE) and VoIP phones.</li>
-                                <li>Initiate a video teleconference (VTC) session if equipped.</li>
-                                <li>Transfer data files of various sizes to test FTP/SMB services.</li>
-                                <li>Send and receive test emails through the system.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Security Validation</h3>
-                    <div class="equipment-card mb-6">
-                        <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                            <li>Verify firewall ACLs are correctly blocking and permitting traffic.</li>
-                            <li>Confirm VPN tunnels are active and passing encrypted traffic.</li>
-                            <li>Attempt to access restricted resources to ensure access controls are working.</li>
-                            <li>Check logs for any security violations or anomalies.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Final System Acceptance Checklist</h3>
-                         <ul class="list-disc list-inside text-gray-700 space-y-2">
-                           <li>Power systems and ECU operate correctly under full load.</li>
-                           <li>End-to-end connectivity is established on NIPR and SIPR networks.</li>
-                           <li>Secure and non-secure voice and data services are fully functional.</li>
-                           <li>All security controls and encryption devices are active and correctly configured.</li>
-                           <li>Satellite link is stable and meets performance requirements.</li>
-                           <li>All tests are documented in the system logbook.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section class="mb-8">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <div class="bg-gray-700 text-white p-4">
-                     <div class="flex items-center">
-                        <div class="step-number mr-4">8</div>
-                        <div>
-                            <h2 class="text-xl font-bold">System Handover and Documentation</h2>
-                            <p class="text-gray-200">Finalizing documentation and completing the mission</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Final Documentation and Training</h3>
-                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
-                         <div class="equipment-card">
-                            <h4 class="font-semibold text-gray-700 mb-2">Final Documentation</h4>
-                             <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                 <li>Save final router and switch configurations.</li>
-                                 <li>Update the network diagrams to reflect the as-built state.</li>
-                                 <li>Complete all entries in the equipment and site logbooks.</li>
-                                 <li>Archive all test results for future reference.</li>
-                             </ul>
-                        </div>
-                        <div class="equipment-card">
-                            <h4 class="font-semibold text-gray-700 mb-2">Operator Training</h4>
-                             <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
-                                 <li>Brief operators on system startup and shutdown procedures.</li>
-                                 <li>Review basic troubleshooting steps for common issues.</li>
-                                 <li>Confirm COMSEC handling and key management procedures.</li>
-                                 <li>Provide contact information for Tier 2/3 support.</li>
-                             </ul>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Mission Completion</h3>
-                    <div class="success-box p-4 rounded-lg">
-                        <h3 class="font-bold text-green-800 mb-2"><i class="fas fa-check-circle mr-2"></i>CPN is Fully Mission Capable</h3>
-                        <p class="text-green-700 text-sm">The Command Post Node has passed all tests and is ready for handover. All systems are operational and providing secure, reliable communications.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+        <div id="guide-content" class="bg-white p-6 rounded-lg shadow-xl">
+            <!-- Step content will be generated here -->
+        </div>
     </main>
+
+    <!-- Image Zoom Modal -->
+    <div id="image-modal" class="modal-backdrop">
+        <span class="absolute top-5 right-8 text-white text-4xl font-bold cursor-pointer" onclick="closeModal()">&times;</span>
+        <div class="modal-content">
+            <img id="modal-image-content" src="" alt="Zoomed Image">
+        </div>
+    </div>
+
+
+    <script>
+        const guideSteps = [
+            { id: 1, title: 'Pre-Deployment', icon: 'fa-clipboard-check' },
+            { id: 2, title: 'Physical Setup', icon: 'fa-truck-ramp-box' },
+            { id: 3, title: 'Power & Grounding', icon: 'fa-bolt' },
+            { id: 4, title: 'Cabling & Patching', icon: 'fa-ethernet' },
+            { id: 5, title: 'System Initialization', icon: 'fa-power-off' },
+            { id: 6, title: 'Network & Tunnels', icon: 'fa-network-wired' },
+            { id: 7, title: 'System Verification', icon: 'fa-check-double' },
+            { id: 8, title: 'Troubleshooting', icon: 'fa-triangle-exclamation' }
+        ];
+
+        let activeStep = 1;
+        let checklistStatus = {};
+
+        function generateContent() {
+            const navContainer = document.getElementById('step-navigation').querySelector('div');
+            const contentContainer = document.getElementById('guide-content');
+
+            navContainer.innerHTML = guideSteps.map(step => `
+                <a href="#step-${step.id}" id="nav-${step.id}" onclick="setActiveStep(${step.id})" class="step-nav flex-shrink-0 text-gray-600 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                    <i class="fas ${step.icon} mr-2"></i>${step.title}
+                </a>
+            `).join('');
+
+            contentContainer.innerHTML = guideSteps.map(step => `
+                <section id="step-${step.id}" class="step-section">
+                    <div id="step-content-${step.id}"></div>
+                </section>
+            `).join('');
+            
+            loadChecklistStatus();
+            renderStepContent(activeStep);
+            updateNav();
+        }
+
+        function setActiveStep(stepId) {
+            activeStep = stepId;
+            const previousActiveSection = document.querySelector('.step-section.active');
+            if (previousActiveSection) {
+                previousActiveSection.classList.remove('active');
+            }
+            
+            const newActiveSection = document.getElementById(`step-${stepId}`);
+            newActiveSection.classList.add('active');
+
+            renderStepContent(stepId);
+            updateNav();
+        }
+        
+        function updateNav() {
+            guideSteps.forEach(step => {
+                const navEl = document.getElementById(`nav-${step.id}`);
+                navEl.classList.remove('active', 'completed');
+                if (step.id === activeStep) {
+                    navEl.classList.add('active');
+                } else if (isStepCompleted(step.id)) {
+                    navEl.classList.add('completed');
+                }
+            });
+        }
+
+        function saveChecklistStatus() {
+            localStorage.setItem('cpnChecklistStatus', JSON.stringify(checklistStatus));
+        }
+
+        function loadChecklistStatus() {
+            const savedStatus = localStorage.getItem('cpnChecklistStatus');
+            if (savedStatus) {
+                checklistStatus = JSON.parse(savedStatus);
+            } else {
+                guideSteps.forEach(step => {
+                    checklistStatus[step.id] = {};
+                });
+            }
+        }
+
+        function isStepCompleted(stepId) {
+            const stepChecklist = checklistStatus[stepId];
+            if (!stepChecklist || Object.keys(stepChecklist).length === 0) return false;
+            return Object.values(stepChecklist).every(status => status === true);
+        }
+
+        function toggleChecklistItem(stepId, itemId, element) {
+            if (!checklistStatus[stepId]) {
+                checklistStatus[stepId] = {};
+            }
+            checklistStatus[stepId][itemId] = !checklistStatus[stepId][itemId];
+            element.classList.toggle('completed', checklistStatus[stepId][itemId]);
+            saveChecklistStatus();
+            updateNav();
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+
+        function zoomImage(src) {
+            document.getElementById('modal-image-content').src = src;
+            document.getElementById('image-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('image-modal').style.display = 'none';
+        }
+
+        function renderStepContent(stepId) {
+            const container = document.getElementById(`step-content-${stepId}`);
+            let html = `
+                <div class="flex items-center mb-6">
+                    <div class="bg-blue-500 text-white rounded-full h-10 w-10 flex items-center justify-center text-xl font-bold mr-4">
+                        <i class="fas ${guideSteps[stepId - 1].icon}"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-800">${guideSteps[stepId - 1].title}</h2>
+                </div>
+            `;
+
+            const getChecked = (itemId) => checklistStatus[stepId] && checklistStatus[stepId][itemId] ? 'completed' : '';
+            const getCheckboxIcon = () => `<div class="checkbox-icon w-5 h-5 border-2 border-gray-300 rounded-sm flex items-center justify-center mr-3 flex-shrink-0"><i class="fas fa-check text-xs"></i></div>`;
+
+            // Content for each step
+            switch(stepId) {
+                case 1: // Pre-Deployment
+                    html += `
+                        <p class="text-gray-600 mb-6">This phase covers critical safety procedures, personnel requirements, and pre-deployment checks to ensure a smooth and safe setup process. Successful completion of this phase is mandatory before any equipment is unpacked.</p>
+                        
+                        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-r-lg" role="alert">
+                            <h3 class="font-bold text-lg"><i class="fas fa-exclamation-triangle mr-2"></i>CRITICAL SAFETY WARNINGS</h3>
+                            <ul class="list-disc list-inside mt-2">
+                                <li><b>High Voltage:</b> Lethal voltages are present. Ensure proper grounding is established BEFORE connecting power. Follow lockout/tagout procedures.</li>
+                                <li><b>RF Radiation Hazard:</b> Maintain safe distances from transmitting antennas. Refer to <span class="tooltip">TM<span class="tooltip-text">Technical Manual</span></span> for specific standoff distances.</li>
+                                <li><b>Heavy Equipment:</b> Transit cases are a multi-person lift. Use proper lifting techniques and equipment to prevent injury.</li>
+                                <li><b>COMSEC:</b> All classified materials and cryptographic keys must be handled in accordance with <span class="tooltip">COMSEC<span class="tooltip-text">Communications Security</span></span> protocols.</li>
+                            </ul>
+                        </div>
+
+                        <div id="checklist-${stepId}" class="space-y-3">
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item1')}" onclick="toggleChecklistItem(${stepId}, 'item1', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Verify Personnel & Clearances</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Ensure all required personnel (25A, 25B, 25S, 91D) are present and have the necessary SECRET/TS security clearances as per mission requirements.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item2')}" onclick="toggleChecklistItem(${stepId}, 'item2', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Conduct Equipment Inventory</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Verify all transit cases and components against the property book (COEI/BII lists). Note any discrepancies. See <a href="#step-2" onclick="setActiveStep(2)" class="text-blue-600 hover:underline">Step 2</a> for a detailed list.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item3')}" onclick="toggleChecklistItem(${stepId}, 'item3', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Obtain COMSEC Materials</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Receive and account for all cryptographic keys, including TACLANE CIKs and FIREFLY vector sets from the COMSEC custodian.</p>
+                                </div>
+                            </div>
+                             <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item4')}" onclick="toggleChecklistItem(${stepId}, 'item4', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Review Site Survey & PACE Plan</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Confirm the designated setup location meets all requirements (clear, level, secure). Review Primary, Alternate, Contingency, and Emergency (<span class="tooltip">PACE<span class="tooltip-text">Primary, Alternate, Contingency, Emergency</span></span>) plans for power and communications.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 2: // Physical Setup
+                    html += `
+                        <p class="text-gray-600 mb-6">Proper site selection, physical setup, and positioning of the transit cases are critical for successful CPN operation and signal integrity.</p>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-3"><i class="fas fa-ruler-combined mr-2"></i>Case Positioning</h3>
+                                <div class="bg-gray-50 p-4 rounded-lg border">
+                                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                        <li>Place UPS cases on a stable, level surface.</li>
+                                        <li>Position the NIPR and SIPR stacks on their respective UPS units, side-by-side.</li>
+                                        <li>Place the Colorless stack on top of either the NIPR or SIPR stack.</li>
+                                        <li>Orient cases with the "BACK" facing the operator for easy patching access.</li>
+                                        <li>Place front and rear covers to the side, ensuring they do not obstruct walkways or ventilation.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-semibold text-gray-800 mb-3"><i class="fas fa-mountain-sun mr-2"></i>Site & Terrain Considerations</h3>
+                                <div class="bg-gray-50 p-4 rounded-lg border">
+                                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                        <li>Area must be flat and well-drained, clear of major obstacles.</li>
+                                        <li>UPS units must be within 75 feet of a tactical power source (generator) or 10 feet of a commercial source.</li>
+                                        <li>Establish a ground point no more than 8 feet from the cases.</li>
+                                        <li>Ensure clear line-of-sight for SATCOM antennas (typically south in CONUS).</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="checklist-${stepId}" class="space-y-3 mt-6">
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item1')}" onclick="toggleChecklistItem(${stepId}, 'item1', this)">
+                                ${getCheckboxIcon()}
+                                <span>Unpack and position NIPR, SIPR, and Colorless cases according to the layout plan.</span>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item2')}" onclick="toggleChecklistItem(${stepId}, 'item2', this)">
+                                ${getCheckboxIcon()}
+                                <span>Position UPS units and place respective cases on top.</span>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                
+                case 3: // Power & Grounding
+                    html += `
+                        <p class="text-gray-600 mb-6">Establishing a solid ground and following the correct power-on sequence is essential to protect equipment and ensure personnel safety.</p>
+
+                        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6 rounded-r-lg" role="alert">
+                            <h3 class="font-bold text-lg"><i class="fas fa-plug-circle-bolt mr-2"></i>Power & Grounding Protocol</h3>
+                            <ul class="list-disc list-inside mt-2">
+                                <li><b>Ground First:</b> Equipment cases MUST be grounded before any power is applied. Verify ground resistance is ≤10 ohms.</li>
+                                <li><b>UPS is Primary:</b> Never plug equipment cases directly into a generator or shore power. Always route power through the UPS to protect against surges and provide battery backup.</li>
+                                <li><b>PACE Plan:</b> The primary power source is typically shore power (120VAC), followed by a 10kW generator. The UPS provides emergency power.</li>
+                            </ul>
+                        </div>
+
+                         <div id="checklist-${stepId}" class="space-y-3">
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item1')}" onclick="toggleChecklistItem(${stepId}, 'item1', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Install Ground Rods and Straps</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Select a grounding location ≤ 8 feet from cases. Drive ground rods, leaving ~6 inches exposed. Attach ground straps securely to the rod clamps. Keep the surrounding ground moist.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item2')}" onclick="toggleChecklistItem(${stepId}, 'item2', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Connect Case Grounds</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Connect all transit case ground straps to the E1 ground stud on the transit case power strip.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item3')}" onclick="toggleChecklistItem(${stepId}, 'item3', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Connect External Power to UPS</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Connect the GFE power source (generator/shore) to the UPS inputs. Power up the GFE source.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item4')}" onclick="toggleChecklistItem(${stepId}, 'item4', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Connect Cases to UPS</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Route NIPR, SIPR, and Colorless power strip cables into their corresponding UPS outputs.</p>
+                                </div>
+                            </div>
+                             <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item5')}" onclick="toggleChecklistItem(${stepId}, 'item5', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Power On UPS Units</h4>
+                                    <p class="text-sm text-gray-600 mt-1">At the UPS rear panel, set the INPUT POWER SWITCHES to ON. The UPS will perform a self-test.</p>
+                                </div>
+                            </div>
+                             <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item6')}" onclick="toggleChecklistItem(${stepId}, 'item6', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Power On Transit Cases</h4>
+                                    <p class="text-sm text-gray-600 mt-1">In each transit case, set the power strip circuit breaker (CB1) to ON. Do not power on individual devices yet.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 4: // Cabling & Patching
+                    html += `
+                        <p class="text-gray-600 mb-6">Accurate cable patching is critical for network connectivity. Follow these diagrams precisely. Refer to the full-size diagrams for detailed port numbers.</p>
+                        
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Core Patching Diagram</h3>
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-lg mb-2">Colorless Case Patching</h4>
+                                <div class="bg-gray-100 p-4 rounded-lg image-zoom-container" onclick="zoomImage('./images/colorless_patch.png')">
+                                    <img src="https://i.imgur.com/k9b8jQG.png" alt="Colorless Case Patching Diagram" class="rounded-lg shadow-md">
+                                </div>
+                                <div id="checklist-4a" class="space-y-2 mt-4">
+                                    <div class="checklist-item p-3 bg-gray-50 rounded-lg flex items-center cursor-pointer ${getChecked('c_item1')}" onclick="toggleChecklistItem(${stepId}, 'c_item1', this)">${getCheckboxIcon()}<span><b>G0/11:</b> Connect TFOCAII to NIPR TACLANE CT.</span></div>
+                                    <div class="checklist-item p-3 bg-gray-50 rounded-lg flex items-center cursor-pointer ${getChecked('c_item2')}" onclick="toggleChecklistItem(${stepId}, 'c_item2', this)">${getCheckboxIcon()}<span><b>G0/12:</b> Connect TFOCAII to SIPR TACLANE CT.</span></div>
+                                    <div class="checklist-item p-3 bg-gray-50 rounded-lg flex items-center cursor-pointer ${getChecked('c_item3')}" onclick="toggleChecklistItem(${stepId}, 'c_item3', this)">${getCheckboxIcon()}<span><b>G0/13:</b> Connect TFOCAII to STT Port J1.</span></div>
+                                    <div class="checklist-item p-3 bg-gray-50 rounded-lg flex items-center cursor-pointer ${getChecked('c_item4')}" onclick="toggleChecklistItem(${stepId}, 'c_item4', this)">${getCheckboxIcon()}<span><b>Management:</b> Connect LAN Manager Laptop to Colorless Switch Port 1.</span></div>
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-lg mb-2">NIPR/SIPR Case Patching</h4>
+                                 <div class="bg-gray-100 p-4 rounded-lg image-zoom-container" onclick="zoomImage('./images/nipr_sipr_patch.png')">
+                                    <img src="https://i.imgur.com/9nJ5b8w.png" alt="NIPR/SIPR Case Patching Diagram" class="rounded-lg shadow-md">
+                                </div>
+                                <div id="checklist-4b" class="space-y-2 mt-4">
+                                    <div class="checklist-item p-3 bg-gray-50 rounded-lg flex items-center cursor-pointer ${getChecked('ns_item1')}" onclick="toggleChecklistItem(${stepId}, 'ns_item1', this)">${getCheckboxIcon()}<span><b>Management:</b> Connect LAN Manager Laptop to Switch Port G0/1.</span></div>
+                                    <div class="checklist-item p-3 bg-gray-50 rounded-lg flex items-center cursor-pointer ${getChecked('ns_item2')}" onclick="toggleChecklistItem(${stepId}, 'ns_item2', this)">${getCheckboxIcon()}<span><b>TACLANE PT:</b> Connect Switch Port G0/36 to TACLANE Plaintext (PT) port.</span></div>
+                                    <div class="checklist-item p-3 bg-gray-50 rounded-lg flex items-center cursor-pointer ${getChecked('ns_item3')}" onclick="toggleChecklistItem(${stepId}, 'ns_item3', this)">${getCheckboxIcon()}<span><b>TACLANE CT:</b> Connect TACLANE Ciphertext (CT) to Colorless Case (G0/11 for NIPR, G0/12 for SIPR).</span></div>
+                                    <div class="checklist-item p-3 bg-gray-50 rounded-lg flex items-center cursor-pointer ${getChecked('ns_item4')}" onclick="toggleChecklistItem(${stepId}, 'ns_item4', this)">${getCheckboxIcon()}<span><b>Router Uplinks:</b> Connect Switch Ports G0/47 & G0/48 to Router Ports G0/0/1 & G0/0/0.</span></div>
+                                    <div class="checklist-item p-3 bg-gray-50 rounded-lg flex items-center cursor-pointer ${getChecked('ns_item5')}" onclick="toggleChecklistItem(${stepId}, 'ns_item5', this)">${getCheckboxIcon()}<span><b>UCSE:</b> Connect Switch Ports G0/40, G0/41, G0/45 to UCSE GE2, GE3, and CIMC ports respectively.</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                
+                case 5: // System Initialization
+                    html += `
+                        <p class="text-gray-600 mb-6">Follow this sequence to power on equipment and initialize the virtual environment. This process can take 10-20 minutes as virtual machines boot up.</p>
+
+                        <div id="checklist-${stepId}" class="space-y-3">
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item1')}" onclick="toggleChecklistItem(${stepId}, 'item1', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Power On NIPR/SIPR Stacks</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Turn on the power switches for the main devices in the NIPR and SIPR cases (Router, Switch). Wait for a green light on the Cisco UCS-E server module to confirm power-up (5-10 mins). If it remains amber, press the button once. If still amber, log into CIMC to power on the host.</p>
+                                </div>
+                            </div>
+                             <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item2')}" onclick="toggleChecklistItem(${stepId}, 'item2', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Power On Colorless Stack</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Turn on the power switches for the devices in the Colorless case. There is no server light on this stack; verify power by observing link lights and fan operation.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item3')}" onclick="toggleChecklistItem(${stepId}, 'item3', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Log into VMware vSphere</h4>
+                                    <p class="text-sm text-gray-600 mt-1">On the appropriate LAN Manager Laptop, access the vSphere Client using the ESXi IP from your IP template (e.g., NIPR LAN Manager for NIPR VMs). Default credentials may be <code class="bg-gray-200 p-1 rounded">root</code> / <code class="bg-gray-200 p-1 rounded">GenDyn1234567*(</code>.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item4')}" onclick="toggleChecklistItem(${stepId}, 'item4', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Verify Virtual Machines are Running</h4>
+                                    <p class="text-sm text-gray-600 mt-1">In vSphere, check the status of all VMs (Call Manager, Riverbed, etc.). If any are not showing a green 'play' icon, right-click and power them on. Refer to TM 11-5895-2060-13&P, WP 0007 for detailed VM setup if deploying from scratch.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 6: // Network & Tunnels
+                    html += `
+                        <p class="text-gray-600 mb-6">This phase establishes the logical connections (tunnels) over the physical links. Accurate configuration is essential for routing traffic between the CPN and other network nodes like the JNN.</p>
+                        
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4"><i class="fas fa-route mr-2"></i>Tunnel Configuration Workflow</h3>
+                        <ol class="list-decimal list-inside space-y-4 mb-6">
+                            <li>
+                                <strong>Establish Physical Layer (OSPFv3):</strong> First, verify the Colorless routers (XT2R) can see each other. This is done by checking for OSPFv3 neighbors over the physical link (e.g., STT, HCLOS).
+                                <div class="code-block p-4 rounded-lg my-2 text-sm">
+                                    <button class="copy-btn" onclick="copyToClipboard(this.nextElementSibling.innerText)"><i class="fas fa-copy"></i></button><pre><code>show ospfv3 neighbor</code></pre>
+                                </div>
+                            </li>
+                            <li>
+                                <strong>Establish TACLANE Security Association (SA):</strong> With the physical link up, the TACLANEs at each end can now communicate. Verify that a Security Association (SA) path is established between the CPN and JNN TACLANEs for both NIPR and SIPR.
+                            </li>
+                            <li>
+                                <strong>Establish Logical Layer (OSPFv2):</strong> Once the TACLANEs form a secure path, the NIPR and SIPR routers (NT2R/ST2R) can establish their own tunnels. Verify OSPFv2 neighbors over the NIPR and SIPR tunnels.
+                                <div class="code-block p-4 rounded-lg my-2 text-sm">
+                                    <button class="copy-btn" onclick="copyToClipboard(this.nextElementSibling.innerText)"><i class="fas fa-copy"></i></button><pre><code>show ip ospf neighbor</code></pre>
+                                </div>
+                            </li>
+                        </ol>
+
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4"><i class="fas fa-terminal mr-2"></i>Router Configuration via PuTTY</h3>
+                        <div id="checklist-${stepId}" class="space-y-3">
+                             <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item1')}" onclick="toggleChecklistItem(${stepId}, 'item1', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Access Router via Console</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Connect a console cable from the LAN Manager to the appropriate router's console port. Use PuTTY with Serial connection, Speed 9600.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item2')}" onclick="toggleChecklistItem(${stepId}, 'item2', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Enter Privileged Exec Mode</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Login with credentials (e.g., <code class="bg-gray-200 p-1 rounded">gdadmin</code> / <code class="bg-gray-200 p-1 rounded">GenDyn12#$</code>) and type <code class="bg-gray-200 p-1 rounded">enable</code>.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item3')}" onclick="toggleChecklistItem(${stepId}, 'item3', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Configure Tunnels</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Using your Army System Authorization (ASA) document, configure the tunnel interfaces. Enter config mode with <code class="bg-gray-200 p-1 rounded">config t</code>, then <code class="bg-gray-200 p-1 rounded">int tunnel&lt;ID&gt;</code>. Use the commands below as a template.</p>
+                                    <div class="code-block p-4 rounded-lg my-2 text-sm">
+                                        <button class="copy-btn" onclick="copyToClipboard(this.nextElementSibling.innerText)"><i class="fas fa-copy"></i></button><pre><code>! --- Sample NIPR/SIPR Tunnel Config (on NT2R/ST2R) ---
+interface Tunnel97992
+ description LINK_TO_JNN
+ ip unnumbered Port-channel1.176
+ ip nhrp map multicast &lt;RHN/JNN Colorless IP&gt;
+ ip nhrp map &lt;NHS IP on XT2R&gt; &lt;RHN/JNN Colorless IP&gt;
+ ip nhrp network-id 97992
+ ip nhrp nhs &lt;NHS IP on XT2R&gt;
+ ip mtu 1280
+ ip tcp adjust-mss 1201
+ tunnel source Port-channel1.176
+ tunnel key 97992
+ ip ospf network point-to-multipoint</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item4')}" onclick="toggleChecklistItem(${stepId}, 'item4', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Save Configuration</h4>
+                                    <p class="text-sm text-gray-600 mt-1">After making changes, save the configuration with <code class="bg-gray-200 p-1 rounded">do copy run start</code> or <code class="bg-gray-200 p-1 rounded">wr</code>.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 7: // System Verification
+                     html += `
+                        <p class="text-gray-600 mb-6">This final phase validates that all systems are communicating correctly and services are available to the end-user.</p>
+                        
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4"><i class="fas fa-list-check mr-2"></i>End-to-End Verification Checklist</h3>
+                        <div id="checklist-${stepId}" class="space-y-3">
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item1')}" onclick="toggleChecklistItem(${stepId}, 'item1', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Verify Colorless Core Link (Layer 1/2)</h4>
+                                    <p class="text-sm text-gray-600 mt-1">From the Colorless Router (XT2R), ping the Linkway/STT modem IP address. Then, use <code class="bg-gray-200 p-1 rounded">show ospfv3 neighbor</code> to verify an OSPFv3 adjacency with the JNN's XT2R.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item2')}" onclick="toggleChecklistItem(${stepId}, 'item2', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Verify TACLANE Connectivity</h4>
+                                    <p class="text-sm text-gray-600 mt-1">From the Colorless Router (XT2R), ping the Cipher Text (CT) IP addresses of both the NIPR and SIPR TACLANEs. Log into the TACLANEs and verify Security Associations (SAs) are established with their distant-end peers.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item3')}" onclick="toggleChecklistItem(${stepId}, 'item3', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Verify NIPR/SIPR Tunnels (Layer 3)</h4>
+                                    <p class="text-sm text-gray-600 mt-1">From the NIPR Router (NT2R), use <code class="bg-gray-200 p-1 rounded">show ip ospf neighbor</code> to verify an adjacency over the NIPR tunnel. Repeat on the SIPR Router (ST2R) for the SIPR tunnel.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item4')}" onclick="toggleChecklistItem(${stepId}, 'item4', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Verify Data Services</h4>
+                                    <p class="text-sm text-gray-600 mt-1">From a user laptop on the NIPR data VLAN (e.g., VLAN 59), attempt to browse to a known NIPR website listed on the ASA. Repeat for SIPR.</p>
+                                </div>
+                            </div>
+                            <div class="checklist-item p-4 bg-gray-50 rounded-lg flex items-start cursor-pointer ${getChecked('item5')}" onclick="toggleChecklistItem(${stepId}, 'item5', this)">
+                                ${getCheckboxIcon()}
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Verify Voice Services</h4>
+                                    <p class="text-sm text-gray-600 mt-1">Attach a VoIP phone to a NIPR voice VLAN port (e.g., VLAN 58). Make a test call to the RHN number listed on the ASA. Repeat for SIPR.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 8: // Troubleshooting
+                    html += `
+                        <p class="text-gray-600 mb-6">This section provides common troubleshooting commands and password recovery procedures.</p>
+                        
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4"><i class="fas fa-hammer mr-2"></i>Common Troubleshooting Commands</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="bg-gray-50 p-4 rounded-lg border">
+                                <h4 class="font-semibold text-lg mb-2">Interface & Connectivity</h4>
+                                <div class="code-block p-4 rounded-lg my-2 text-sm">
+<pre><code>show ip interface brief
+show interfaces &lt;int_name&gt;
+show cdp neighbor [detail]
+show interface trunk
+ping &lt;ip_address&gt;
+traceroute &lt;ip_address&gt;</code></pre>
+                                </div>
+                            </div>
+                             <div class="bg-gray-50 p-4 rounded-lg border">
+                                <h4 class="font-semibold text-lg mb-2">Routing & Tunnels</h4>
+                                <div class="code-block p-4 rounded-lg my-2 text-sm">
+<pre><code>show ip route
+show ip ospf neighbor
+show ospfv3 neighbor
+show ip nhrp brief
+show crypto isakmp sa
+show crypto ipsec sa</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4"><i class="fas fa-key mr-2"></i>Password Recovery (Cisco Router)</h3>
+                        <div class="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg">
+                            <p class="mb-4">This procedure requires console access and a system reboot. It bypasses the startup configuration to allow password reset.</p>
+                            <ol class="list-decimal list-inside space-y-2">
+                                <li>Connect via console and reboot the router. Send a <code class="bg-gray-200 p-1 rounded">Ctrl+Break</code> signal during startup to enter ROMMON mode.</li>
+                                <li>At the <code class="bg-gray-200 p-1 rounded">rommon></code> prompt, type <code class="bg-gray-200 p-1 rounded">confreg 0x2142</code> and then <code class="bg-gray-200 p-1 rounded">reset</code>.</li>
+                                <li>When the router boots, skip the initial setup dialog. Enter privileged mode with <code class="bg-gray-200 p-1 rounded">enable</code>.</li>
+                                <li>Load your saved configuration: <code class="bg-gray-200 p-1 rounded">copy startup-config running-config</code>.</li>
+                                <li>Enter global config mode (<code class="bg-gray-200 p-1 rounded">config t</code>) and set a new password: <code class="bg-gray-200 p-1 rounded">enable secret &lt;new_password&gt;</code>.</li>
+                                <li>Reset the configuration register to its normal value: <code class="bg-gray-200 p-1 rounded">config-register 0x2102</code>.</li>
+                                <li>Exit config mode (<code class="bg-gray-200 p-1 rounded">end</code>) and save your changes: <code class="bg-gray-200 p-1 rounded">copy running-config startup-config</code>.</li>
+                            </ol>
+                        </div>
+                    `;
+                    break;
+            }
+            container.innerHTML = html;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            generateContent();
+        });
+
+    </script>
 </body>
 </html>
