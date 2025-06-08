@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPN Setup Guide - Complete Manual</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; }
+        .warning-box { background: linear-gradient(135deg, #fef3c7 0%, #fbbf24 100%); border-left: 4px solid #f59e0b; }
+        .danger-box { background: linear-gradient(135deg, #fecaca 0%, #ef4444 100%); border-left: 4px solid #dc2626; }
+        .info-box { background: linear-gradient(135deg, #dbeafe 0%, #3b82f6 100%); border-left: 4px solid #2563eb; }
+        .success-box { background: linear-gradient(135deg, #d1fae5 0%, #10b981 100%); border-left: 4px solid #059669; }
+        .step-number { background: linear-gradient(135deg, #1f2937 0%, #374151 100%); color: white; width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; }
+        .equipment-card { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 1rem; margin-bottom: 0.5rem; }
+        .code-block { background-color: #1f2937; color: #f9fafb; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 0.875rem; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <header class="bg-gray-900 text-white py-6">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-satellite-dish text-3xl text-blue-400"></i>
+                <div>
+                    <h1 class="text-3xl font-bold">Command Post Node (CPN) Setup Guide</h1>
+                    <p class="text-gray-300">Comprehensive Manual for BnCPN Installation & Configuration</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8">
+
+        <section class="mb-12">
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="flex items-center mb-6">
+                    <i class="fas fa-info-circle text-3xl text-blue-600 mr-4"></i>
+                    <h2 class="text-2xl font-bold text-gray-800">Mission Overview</h2>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3 text-gray-700">What is a Command Post Node (CPN)?</h3>
+                        <p class="text-gray-600 mb-4">
+                            The Command Post Node (CPN) is a tactical communications system designed to provide secure, high-capacity voice and data communications for battalion-level headquarters and smaller units. It serves as the primary communications backbone for field operations, enabling connectivity to higher echelon networks including WIN-T (Warfighter Information Network-Tactical) and the Global Information Grid (GIG).
+                        </p>
+                        <h4 class="font-semibold text-gray-700 mb-2">Key Capabilities:</h4>
+                        <ul class="list-disc list-inside text-gray-600 space-y-1">
+                            <li>Secure voice and data communications</li>
+                            <li>Internet Protocol (IP) routing and switching</li>
+                            <li>Satellite communications (SATCOM) connectivity</li>
+                            <li>Integration with higher echelon networks</li>
+                            <li>Support for multiple security classifications</li>
+                            <li>Mobile and deployable operations</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <h4 class="font-semibold text-blue-800 mb-2">
+                                <i class="fas fa-lightbulb mr-2"></i>Quick Start Tip
+                            </h4>
+                            <p class="text-blue-700 text-sm">
+                                Review all safety procedures and ensure all required personnel are available before beginning setup. Having experienced signal personnel is critical to mission success.
+                            </p>
+                        </div>
+                         <div class="mt-6 p-4 bg-gray-100 rounded-lg border border-gray-200">
+                            <h4 class="font-semibold text-gray-800 mb-2">
+                                <i class="fas fa-book-open mr-2"></i>Manual Structure
+                            </h4>
+                            <p class="text-gray-700 text-sm">
+                                This guide is organized into sequential steps. Complete each step's checklists before proceeding to the next to ensure a successful and safe setup.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="bg-red-600 text-white p-4">
+                    <div class="flex items-center">
+                        <div class="step-number mr-4">1</div>
+                        <div>
+                            <h2 class="text-xl font-bold">Prerequisites and Safety Procedures</h2>
+                            <p class="text-red-100">Critical safety requirements and pre-deployment checks</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="danger-box p-4 rounded-lg mb-6">
+                        <h3 class="font-bold text-red-800 mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>CRITICAL SAFETY WARNING</h3>
+                        <ul class="text-red-700 space-y-1 text-sm">
+                            <li>• **High voltage equipment** - ensure proper grounding before operation.</li>
+                            <li>• **Radio frequency (RF) radiation hazard** - maintain safe distances during transmission.</li>
+                            <li>• **Heavy equipment lifting** - use proper lifting techniques and equipment.</li>
+                            <li>• **Classified material handling** - follow all COMSEC procedures.</li>
+                        </ul>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 mb-6">
+                         <div>
+                            <h3 class="text-xl font-semibold mb-4 text-gray-800">Required Personnel</h3>
+                            <div class="equipment-card">
+                                <h4 class="font-semibold text-gray-700 mb-2">Primary Team</h4>
+                                <ul class="text-gray-600 space-y-1 text-sm">
+                                    <li>• Signal Officer (25A) - 1 required</li>
+                                    <li>• Information Technology Specialist (25B) - 2 required</li>
+                                    <li>• Satellite Communications Operator (25S) - 1 required</li>
+                                </ul>
+                             </div>
+                             <div class="equipment-card">
+                                 <h4 class="font-semibold text-gray-700 mb-2">Support Team</h4>
+                                <ul class="text-gray-600 space-y-1 text-sm">
+                                    <li>• Power Generation Equipment Repairer (91D) - 1 required</li>
+                                    <li>• Motor Transport Operator (88M) - 2 required</li>
+                                    <li>• Security Personnel - As required by mission</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div>
+                             <h3 class="text-xl font-semibold mb-4 text-gray-800">Security Clearance Requirements</h3>
+                            <div class="info-box p-4 rounded-lg h-full">
+                                <ul class="text-blue-800 space-y-2">
+                                    <li><strong>Secret Clearance:</strong> All personnel handling classified equipment.</li>
+                                    <li><strong>Top Secret/SCI:</strong> Personnel configuring SIPR networks and classified routing.</li>
+                                    <li><strong>COMSEC Custodian:</strong> Personnel handling cryptographic materials.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Pre-Deployment Checklist</h3>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2">
+                            <li>Conduct site survey and security assessment.</li>
+                            <li>Verify all personnel security clearances and training.</li>
+                            <li>Complete equipment inventory and operational checks.</li>
+                            <li>Obtain COMSEC materials and cryptographic keys.</li>
+                            <li>Coordinate transportation and logistics support.</li>
+                            <li>Review and approve frequency allocations and call signs.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="bg-blue-600 text-white p-4">
+                     <div class="flex items-center">
+                        <div class="step-number mr-4">2</div>
+                        <div>
+                            <h2 class="text-xl font-bold">Equipment Inventory and Verification</h2>
+                            <p class="text-blue-100">Complete equipment list and pre-deployment inspection</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                     <div class="warning-box p-4 rounded-lg mb-6">
+                        <p class="text-yellow-800"><i class="fas fa-exclamation-triangle mr-2"></i><strong>Important:</strong> All equipment must pass inspection before deployment. Document any deficiencies and coordinate replacement equipment as required.</p>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Core System Components</h3>
+                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                        <div class="equipment-card">
+                            <h4 class="font-medium text-gray-700 mb-2">ANTTC-64D(V)3 Shelter System</h4>
+                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>Environmentally controlled enclosure with power distribution and equipment racks.</li></ul>
+                        </div>
+                        <div class="equipment-card">
+                            <h4 class="font-medium text-gray-700 mb-2">WIN-T Point-of-Presence (POP)</h4>
+                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>Provides network routing, switching, and satellite interface capabilities.</li></ul>
+                        </div>
+                    </div>
+                     <h3 class="text-xl font-semibold mb-4 text-gray-800">Satellite and Crypto Equipment</h3>
+                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                         <div class="equipment-card">
+                            <h4 class="font-medium text-gray-700 mb-2">AN/TSC-185B Phoenix Terminal</h4>
+                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>Mobile Ku-band satellite terminal.</li></ul>
+                        </div>
+                        <div class="equipment-card">
+                            <h4 class="font-medium text-gray-700 mb-2">KG-175D TACLANE Encryptor</h4>
+                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>High-speed network encryptor for securing data up to Top Secret/SCI.</li></ul>
+                        </div>
+                    </div>
+                     <h3 class="text-xl font-semibold mb-4 text-gray-800">Power and Network Infrastructure</h3>
+                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                         <div class="equipment-card">
+                            <h4 class="font-medium text-gray-700 mb-2">MEP-831A Generator & UPS</h4>
+                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>Provides primary and backup power for all systems.</li></ul>
+                        </div>
+                        <div class="equipment-card">
+                            <h4 class="font-medium text-gray-700 mb-2">Cisco Routers & Switches</h4>
+                            <ul class="text-gray-600 text-sm list-disc list-inside"><li>Forms the backbone of the local classified and unclassified networks.</li></ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Equipment Inspection Checklist</h3>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li>Verify all equipment serial numbers against property book.</li>
+                           <li>Conduct power-on self-test (POST) for all electronic equipment.</li>
+                           <li>Inspect all cables and connectors for damage or wear.</li>
+                           <li>Verify antenna systems are complete and undamaged.</li>
+                           <li>Test generator operation and fuel system integrity.</li>
+                           <li>Confirm availability of technical manuals and documentation.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="bg-green-600 text-white p-4">
+                    <div class="flex items-center">
+                        <div class="step-number mr-4">3</div>
+                        <div>
+                            <h2 class="text-xl font-bold">Site Preparation and Physical Setup</h2>
+                            <p class="text-green-100">Site survey, preparation, and shelter deployment</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="warning-box p-4 rounded-lg mb-6">
+                        <p class="text-yellow-800"><i class="fas fa-exclamation-triangle mr-2"></i><strong>Safety Notice:</strong> Shelter deployment requires coordination of multiple personnel and heavy equipment. Ensure all safety procedures are followed.</p>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Site Selection Requirements</h3>
+                     <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                        <div class="equipment-card">
+                             <h4 class="font-semibold text-gray-700 mb-2">Location Requirements</h4>
+                             <ul class="text-gray-600 space-y-2 text-sm list-disc list-inside">
+                                <li><strong>Size:</strong> Minimum 100m x 100m cleared area.</li>
+                                <li><strong>Elevation:</strong> High ground with clear line of sight to the southern sky (for CONUS).</li>
+                                <li><strong>Access:</strong> Vehicle accessible for heavy equipment.</li>
+                                <li><strong>Security:</strong> Defensible position with multiple egress routes.</li>
+                            </ul>
+                        </div>
+                        <div class="equipment-card">
+                             <h4 class="font-semibold text-gray-700 mb-2">Environmental Considerations</h4>
+                            <ul class="text-gray-600 space-y-2 text-sm list-disc list-inside">
+                                <li><strong>RF Environment:</strong> Survey for interference sources (power lines, other transmitters).</li>
+                                <li><strong>Weather:</strong> Assess prevailing wind patterns and ensure good drainage.</li>
+                                <li><strong>Ground:</strong> Must be firm and as level as possible.</li>
+                                <li><strong>Vegetation:</strong> Clear any obstacles for antenna positioning.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Shelter and Antenna Setup</h3>
+                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-3">Shelter Deployment</h4>
+                            <div class="equipment-card">
+                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                     <li>Position shelter using GPS coordinates from plan.</li>
+                                     <li>Orient door away from prevailing winds.</li>
+                                     <li>Deploy stabilizer jacks and level the shelter.</li>
+                                     <li>Connect grounding system to the site earth ground.</li>
+                                 </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-3">Antenna Installation</h4>
+                             <div class="equipment-card">
+                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                     <li>Assemble antenna reflector and feed assembly.</li>
+                                     <li>Mount antenna and connect RF cables.</li>
+                                     <li>Perform initial pointing using GPS and compass.</li>
+                                     <li>Ensure proper separation from other antennas to minimize interference.</li>
+                                 </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Site Setup Verification Checklist</h3>
+                         <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li>Complete site survey and environmental assessment.</li>
+                           <li>Deploy and secure ANTTC-64D(V)3 shelter system.</li>
+                           <li>Install and test environmental control systems (ECU).</li>
+                           <li>Deploy and align all antenna systems.</li>
+                           <li>Establish perimeter security and access control.</li>
+                           <li>Verify power generation and distribution systems are ready.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="bg-yellow-600 text-white p-4">
+                     <div class="flex items-center">
+                        <div class="step-number mr-4">4</div>
+                        <div>
+                            <h2 class="text-xl font-bold">Power Systems Installation and Testing</h2>
+                            <p class="text-yellow-100">Generator setup, power distribution, and grounding</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="danger-box p-4 rounded-lg mb-6">
+                        <p class="text-red-800"><i class="fas fa-exclamation-triangle mr-2"></i><strong>High Voltage Warning:</strong> Only qualified personnel (91D) should perform electrical installations. Follow all safety lockout/tagout procedures.</p>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Generator & UPS Setup</h3>
+                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                         <div class="equipment-card">
+                            <h4 class="font-semibold text-gray-700 mb-2">MEP-831A Generator Setup</h4>
+                            <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                <li>Position generator minimum 10 feet from structures.</li>
+                                <li>Connect fuel system and prime if necessary.</li>
+                                <li>Perform pre-start inspection (oil, coolant, battery).</li>
+                                <li>Start generator and verify stable voltage (120V/208V) and frequency (60Hz).</li>
+                            </ul>
+                        </div>
+                        <div class="equipment-card">
+                            <h4 class="font-semibold text-gray-700 mb-2">UPS Configuration</h4>
+                             <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                <li>Connect critical loads (e.g., routers, servers, crypto) to the UPS.</li>
+                                <li>Ensure UPS is connected to a dedicated circuit from the distribution panel.</li>
+                                <li>Test battery runtime by simulating a power failure.</li>
+                                <li>Configure automatic shutdown scripts for servers if applicable.</li>
+                            </ul>
+                        </div>
+                    </div>
+                     <h3 class="text-xl font-semibold mb-4 text-gray-800">Grounding and Bonding</h3>
+                     <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                        <div class="equipment-card">
+                            <h4 class="font-semibold text-gray-700 mb-2">Earth Grounding System</h4>
+                            <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                <li>Install a minimum of 3 ground rods, 8 feet deep, spaced 6 feet apart.</li>
+                                <li>Connect rods with #4 AWG bare copper wire.</li>
+                                <li>Test ground resistance (must be **≤10 ohms**).</li>
+                            </ul>
+                        </div>
+                         <div class="equipment-card">
+                            <h4 class="font-semibold text-gray-700 mb-2">Equipment Bonding</h4>
+                            <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                <li>Bond all equipment chassis, racks, and the shelter frame to the grounding system.</li>
+                                <li>Install surge protection devices on power and data lines.</li>
+                                <li>Verify electrical continuity of all bonds.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Power System Verification Checklist</h3>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li>Install and test MEP-831A generator under load.</li>
+                           <li>Configure power distribution panel and label all circuits.</li>
+                           <li>Install and test UPS systems for critical loads.</li>
+                           <li>Install grounding system and verify resistance is ≤10 ohms.</li>
+                           <li>Test automatic transfer switches and emergency shutdown.</li>
+                           <li>Verify all safety systems and protective devices (GFCIs).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="bg-purple-600 text-white p-4">
+                     <div class="flex items-center">
+                        <div class="step-number mr-4">5</div>
+                        <div>
+                            <h2 class="text-xl font-bold">Network Configuration and Integration</h2>
+                            <p class="text-purple-100">IP configuration, routing setup, and network security</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="info-box p-4 rounded-lg mb-6">
+                        <p class="text-blue-800"><i class="fas fa-info-circle mr-2"></i><strong>Network Design:</strong> The CPN implements a multi-tier architecture supporting both classified (SIPR) and unclassified (NIPR) traffic through separate, physically or logically isolated security domains.</p>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Core Network Setup</h3>
+                     <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-3">Switch & VLAN Configuration</h4>
+                            <div class="equipment-card">
+                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                     <li>Load baseline configuration on switches.</li>
+                                     <li>Configure VLANs to segment traffic (e.g., VLAN 100 for SIPR, VLAN 200 for NIPR).</li>
+                                     <li>Implement port security to restrict unauthorized device access.</li>
+                                     <li>Configure trunk ports to carry tagged VLAN traffic between switches and routers.</li>
+                                 </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-3">Router & Routing Protocols</h4>
+                            <div class="equipment-card">
+                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                     <li>Configure router interfaces for each VLAN.</li>
+                                     <li>Set up **OSPF** for internal routing within the CPN.</li>
+                                     <li>Configure **BGP** for external routing to the WIN-T network.</li>
+                                     <li>Implement Access Control Lists (ACLs) to filter traffic between networks.</li>
+                                 </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">TACLANE and Security Configuration</h3>
+                    <div class="equipment-card mb-6">
+                        <h4 class="font-semibold text-gray-700 mb-2">TACLANE Integration</h4>
+                        <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                            <li>Physically install TACLANE encryptors between the router and the "black" (unsecured) side of the satellite link.</li>
+                            <li>Load cryptographic keys using a KIV-7M or other fill device.</li>
+                            <li>Configure the TACLANE with the correct IP settings to create a secure tunnel.</li>
+                            <li>Verify traffic is being successfully encrypted and decrypted.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Network Configuration Checklist</h3>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li>Configure WIN-T POP and core switches with baseline settings.</li>
+                           <li>Set up VLAN segmentation for all security domains.</li>
+                           <li>Configure OSPF and BGP routing protocols.</li>
+                           <li>Implement security policies, ACLs, and firewall rules.</li>
+                           <li>Install and configure TACLANE devices with current keys.</li>
+                           <li>Test network connectivity and routing tables within the CPN.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="bg-indigo-600 text-white p-4">
+                     <div class="flex items-center">
+                        <div class="step-number mr-4">6</div>
+                        <div>
+                            <h2 class="text-xl font-bold">Satellite Communications Setup</h2>
+                            <p class="text-indigo-100">Antenna pointing, modem configuration, and link establishment</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                     <div class="warning-box p-4 rounded-lg mb-6">
+                        <p class="text-yellow-800"><i class="fas fa-exclamation-triangle mr-2"></i><strong>RF Safety Warning:</strong> Maintain minimum safe distances from transmitting antennas. Coordinate with RF safety officer before energizing systems.</p>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Antenna Pointing and Modem Setup</h3>
+                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-3">Antenna Pointing & Alignment</h4>
+                            <div class="equipment-card">
+                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                     <li>Use the satellite acquisition plan to determine correct Azimuth, Elevation, and Polarization.</li>
+                                     <li>Use a spectrum analyzer to find the satellite beacon.</li>
+                                     <li>Perform fine-tuning adjustments to peak the signal for maximum strength.</li>
+                                     <li>Lock the antenna position.</li>
+                                 </ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-700 mb-3">Satellite Modem Configuration</h4>
+                             <div class="equipment-card">
+                                 <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                     <li>Configure the modem with the correct transmit/receive frequencies, data rates, and modulation type per the mission plan.</li>
+                                     <li>Set the modem's IP addresses to integrate with the router.</li>
+                                     <li>Enable automatic power control (APC) to maintain link stability.</li>
+                                 </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Link Establishment and Monitoring</h3>
+                    <div class="equipment-card mb-6">
+                        <h4 class="font-semibold text-gray-700 mb-2">Acquiring the Link</h4>
+                        <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                           <li>Coordinate with the satellite network control station to bring up the link.</li>
+                           <li>Enable the modem transmitter and verify power levels.</li>
+                           <li>Monitor key performance indicators (KPIs) like **Eb/No** (signal quality) and **BER** (bit error rate).</li>
+                           <li>The target Eb/No is typically >8.0 dB, with a BER of <1x10⁻⁶.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">SATCOM Configuration Checklist</h3>
+                        <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li>Install and align satellite antenna system.</li>
+                           <li>Configure satellite modem with correct RF and network parameters.</li>
+                           <li>Establish satellite link and verify performance meets mission standards.</li>
+                           <li>Integrate SATCOM with network routing via the default route.</li>
+                           <li>Configure QoS and traffic management for the satellite link.</li>
+                           <li>Test end-to-end connectivity to a higher echelon node.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="bg-teal-600 text-white p-4">
+                     <div class="flex items-center">
+                        <div class="step-number mr-4">7</div>
+                        <div>
+                            <h2 class="text-xl font-bold">System Testing and Validation</h2>
+                            <p class="text-teal-100">Comprehensive testing procedures and acceptance criteria</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="info-box p-4 rounded-lg mb-6">
+                        <p class="text-blue-800"><i class="fas fa-info-circle mr-2"></i><strong>Test Objective:</strong> Verify that all CPN systems meet operational requirements and can support mission-critical communications before declaring Full Operational Capability (FOC).</p>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Network and Communications Testing</h3>
+                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                         <div class="equipment-card">
+                            <h4 class="font-semibold text-gray-700 mb-2">Network Performance Tests</h4>
+                             <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                <li>Conduct `ping` and `traceroute` tests to all key nodes.</li>
+                                <li>Verify DNS resolution and DHCP lease assignment.</li>
+                                <li>Run `iperf` or similar tools to test throughput between LAN clients and across the WAN link.</li>
+                                <li>Measure latency and jitter for real-time applications.</li>
+                            </ul>
+                        </div>
+                        <div class="equipment-card">
+                            <h4 class="font-semibold text-gray-700 mb-2">Application & Voice Tests</h4>
+                             <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                <li>Make test calls using secure voice (STE) and VoIP phones.</li>
+                                <li>Initiate a video teleconference (VTC) session if equipped.</li>
+                                <li>Transfer data files of various sizes to test FTP/SMB services.</li>
+                                <li>Send and receive test emails through the system.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Security Validation</h3>
+                    <div class="equipment-card mb-6">
+                        <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                            <li>Verify firewall ACLs are correctly blocking and permitting traffic.</li>
+                            <li>Confirm VPN tunnels are active and passing encrypted traffic.</li>
+                            <li>Attempt to access restricted resources to ensure access controls are working.</li>
+                            <li>Check logs for any security violations or anomalies.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Final System Acceptance Checklist</h3>
+                         <ul class="list-disc list-inside text-gray-700 space-y-2">
+                           <li>Power systems and ECU operate correctly under full load.</li>
+                           <li>End-to-end connectivity is established on NIPR and SIPR networks.</li>
+                           <li>Secure and non-secure voice and data services are fully functional.</li>
+                           <li>All security controls and encryption devices are active and correctly configured.</li>
+                           <li>Satellite link is stable and meets performance requirements.</li>
+                           <li>All tests are documented in the system logbook.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="mb-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="bg-gray-700 text-white p-4">
+                     <div class="flex items-center">
+                        <div class="step-number mr-4">8</div>
+                        <div>
+                            <h2 class="text-xl font-bold">System Handover and Documentation</h2>
+                            <p class="text-gray-200">Finalizing documentation and completing the mission</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Final Documentation and Training</h3>
+                    <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                         <div class="equipment-card">
+                            <h4 class="font-semibold text-gray-700 mb-2">Final Documentation</h4>
+                             <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                 <li>Save final router and switch configurations.</li>
+                                 <li>Update the network diagrams to reflect the as-built state.</li>
+                                 <li>Complete all entries in the equipment and site logbooks.</li>
+                                 <li>Archive all test results for future reference.</li>
+                             </ul>
+                        </div>
+                        <div class="equipment-card">
+                            <h4 class="font-semibold text-gray-700 mb-2">Operator Training</h4>
+                             <ul class="text-gray-600 text-sm space-y-1 list-disc list-inside">
+                                 <li>Brief operators on system startup and shutdown procedures.</li>
+                                 <li>Review basic troubleshooting steps for common issues.</li>
+                                 <li>Confirm COMSEC handling and key management procedures.</li>
+                                 <li>Provide contact information for Tier 2/3 support.</li>
+                             </ul>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4 text-gray-800">Mission Completion</h3>
+                    <div class="success-box p-4 rounded-lg">
+                        <h3 class="font-bold text-green-800 mb-2"><i class="fas fa-check-circle mr-2"></i>CPN is Fully Mission Capable</h3>
+                        <p class="text-green-700 text-sm">The Command Post Node has passed all tests and is ready for handover. All systems are operational and providing secure, reliable communications.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>
